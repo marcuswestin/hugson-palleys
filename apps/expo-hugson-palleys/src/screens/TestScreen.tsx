@@ -8,8 +8,10 @@ export default function TestScreen() {
       <Text>Open up App.tsx any time to start working on your app!</Text>
       <Button
         title="Press me"
-        onPress={() => {
-          alert("Hello");
+        onPress={async () => {
+          let res = await fetch("http://localhost:8080");
+          let bodyText = await res.text();
+          alert(bodyText);
         }}
       ></Button>
       <StatusBar style="auto" />
