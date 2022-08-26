@@ -1,9 +1,10 @@
 import { StatusBar } from "expo-status-bar"
 import React from "react"
 import { Button, StyleSheet, Text, View } from "react-native"
-import { config } from "../shared/universal/config"
+import { TestAPI } from "../shared/universal/api-spec"
+import { makeAPIClient } from "../shared/universal/lib-api/lib-api-specification"
 
-const serverURL = config.server.getURL()
+const client = makeAPIClient(TestAPI)
 
 export default function TestScreen() {
   return (
@@ -12,9 +13,8 @@ export default function TestScreen() {
       <Button
         title="Ping server"
         onPress={async () => {
-          let res = await fetch(serverURL)
-          let bodyText = await res.text()
-          alert(bodyText)
+          let res = await client.ping({ message: "hi there" })
+          alert(res.message)
         }}
       ></Button>
       <StatusBar style="auto" />

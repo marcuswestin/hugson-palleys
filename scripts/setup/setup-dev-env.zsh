@@ -3,7 +3,7 @@ WD=`pwd` && cd "$(git rev-parse --show-toplevel)" && . scripts/setup/boilerplate
 
 show_commands
 
-install_if_not_exists 'deno' 'brew install deno'
+install_if_not_exists 'bun' 'curl https://bun.sh/install | bash'
 install_if_not_exists 'expo' 'npm install --global expo-cli'
 
 cd ${ROOT}
