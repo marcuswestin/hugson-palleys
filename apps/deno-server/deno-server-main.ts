@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.153.0/http/server.ts"
-import { config } from "./src/shared/config.ts"
+import { config } from "./src/shared/universal/config.ts"
 
 const handler = (request: Request): Response => {
   const userAgent = request.headers.get("user-agent") ?? "Unknown"
