@@ -1,15 +1,18 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
+import { config } from "../shared/config";
+
+const serverURL = config.server.getURL();
 
 export default function TestScreen() {
   return (
     <View style={styles.container}>
       <Text>Open up App.tsx any time to start working on your app!</Text>
       <Button
-        title="Press me"
+        title="Ping server"
         onPress={async () => {
-          let res = await fetch("http://localhost:8080");
+          let res = await fetch(serverURL);
           let bodyText = await res.text();
           alert(bodyText);
         }}
