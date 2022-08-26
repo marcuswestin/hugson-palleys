@@ -1,5 +1,5 @@
-import TestScreen from "./src/screens/TestScreen";
+import TestScreen from "./src/screens/TestScreen"
 
 export default function App() {
-  return <TestScreen />;
+  return <TestScreen />
 }

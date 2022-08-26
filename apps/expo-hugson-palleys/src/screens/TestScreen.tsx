@@ -1,9 +1,9 @@
-import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
-import { config } from "../shared/config";
+import { StatusBar } from "expo-status-bar"
+import React from "react"
+import { Button, StyleSheet, Text, View } from "react-native"
+import { config } from "../shared/config"
 
-const serverURL = config.server.getURL();
+const serverURL = config.server.getURL()
 
 export default function TestScreen() {
   return (
@@ -12,14 +12,14 @@ export default function TestScreen() {
       <Button
         title="Ping server"
         onPress={async () => {
-          let res = await fetch(serverURL);
-          let bodyText = await res.text();
-          alert(bodyText);
+          let res = await fetch(serverURL)
+          let bodyText = await res.text()
+          alert(bodyText)
         }}
       ></Button>
       <StatusBar style="auto" />
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -29,4 +29,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-});
+})

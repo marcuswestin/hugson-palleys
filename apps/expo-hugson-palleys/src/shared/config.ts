@@ -5,8 +5,8 @@ export const config = {
     port: 8086,
     getURL: getServerURL,
   },
-};
+}
 
 function getServerURL() {
-  return `${config.server.protocol}://${config.server.hostname}:${config.server.port}/`;
+  return `${config.server.protocol}://${config.server.hostname}:${config.server.port}/`
 }
