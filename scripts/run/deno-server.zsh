@@ -3,4 +3,4 @@ WD=`pwd` && cd "$(git rev-parse --show-toplevel)" && . scripts/setup/boilerplate
 
 cd $ROOT/apps/deno-server
 
-deno run --allow-net deno-server-main.ts
+deno run --allow-net --watch deno-server-main.ts
