@@ -1,8 +1,0 @@
-{
-  "name": "bun-server",
-  "version": "0.0.3",
-  "module": "src/bun-server-main.ts",
-  "devDependencies": {
-    "bun-types": "latest"
-  }
-}

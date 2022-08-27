@@ -1,3 +1,5 @@
+import fetch, { RequestInit, Response } from "node-fetch"
+
 // API Specification: types
 ///////////////////////////
 
@@ -40,34 +42,31 @@ function makeAPIPointClientFunction<API extends APISpecification, APIPoint exten
   apiPointName: APIPointPath
 ): APIPointFunction<APIPoint> {
   return async (request: APIPoint["request"]) => {
-    let timeout = 2500
+    let timeout = 7500
     let url = `${api.apiHost}${api.apiBaseRoute}/${apiPointName}`
-    let body = JSON.stringify(request)
 
-    let apiRes = await fetchWithTimeout(url, timeout, {
+    let apiRes = await fetchWithTimeout(timeout, url, {
       method: "POST",
       redirect: "follow",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: body,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
     })
 
     if (!apiRes.ok) {
       throw new Error(await apiRes.text())
     }
 
-    try {
-      return await apiRes.json()
-    } catch (err) {
-      return null
-    }
+    return apiRes.json()
   }
 }
 
-async function fetchWithTimeout(url: string, timeout: number, params: RequestInit): Promise<Response> {
-  return await fetch(url, params)
+async function fetchWithTimeout(timeout: number, url: string, params: RequestInit): Promise<Response> {
   const abortController = new AbortController()
   const id = setTimeout(() => abortController.abort(), timeout)
-  const response = await fetch(url, { ...params, signal: abortController.signal })
+  const response = await fetch(url, {
+    ...params,
+    signal: abortController.signal as any,
+  })
   clearTimeout(id)
   return response
 }

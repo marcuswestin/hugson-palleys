@@ -1,8 +1,8 @@
 import { StatusBar } from "expo-status-bar"
 import React from "react"
 import { Button, StyleSheet, Text, View } from "react-native"
-import { TestAPI } from "../shared/universal/api-spec"
-import { makeAPIClient } from "../shared/universal/lib-api/lib-api-specification"
+import { TestAPI } from "../shared/universal/apis/api-specs"
+import { makeAPIClient } from "../shared/universal/apis/lib-api/lib-api-specification"
 
 const client = makeAPIClient(TestAPI)
 

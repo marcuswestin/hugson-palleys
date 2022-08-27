@@ -1,6 +1,7 @@
 // API Server
 /////////////
 
+import * as http from "http"
 import { APIPointFunction, APIRuntimeSpecs, APISpecification } from "./lib-api-specification"
 
 export function makeAPIServer<API extends APISpecification>(api: APIRuntimeSpecs<API>, handlers: APIHandlers<API>) {
@@ -11,26 +12,19 @@ export function wrapAPIServers(...apiServers: APIServer<any>[]) {
   return new APIServerWrapper(apiServers)
 }
 
-// Internal
-///////////
-
 class APIServerWrapper {
   constructor(private apiServers: APIServer<any>[]) {}
 
-  async handleRequest(req: Request): Promise<Response> {
-    const url = new URL(req.url)
-    for (const apiServer of this.apiServers) {
-      if (apiServer.hasHandler(url)) {
-        return await apiServer.handleRequest(req)
+  async handleRequest(req: http.IncomingMessage, res: http.ServerResponse) {
+    for (let apiServer of this.apiServers) {
+      if (apiServer.hasHandler(req)) {
+        await apiServer.handleRequest(req, res)
+        return true
       }
     }
-    return makeNotFoundResponse(req)
-  }
-}
 
-function makeNotFoundResponse(req: Request) {
-  const text = `Not found: ${req.url}`
-  return new Response(text, { status: 404 })
+    return false
+  }
 }
 
 type APIHandlers<API extends APISpecification> = {
@@ -38,30 +32,47 @@ type APIHandlers<API extends APISpecification> = {
 }
 
 class APIServer<API extends APISpecification> {
-  private base: string
+  constructor(private api: APIRuntimeSpecs<API>, private handlers: APIHandlers<API>) {}
 
-  constructor(api: APIRuntimeSpecs<API>, readonly handlers: APIHandlers<API>) {
-    this.base = "/" + api.apiBaseRoute + "/"
+  hasHandler(req: http.IncomingMessage): boolean {
+    return !!this.getHandler(req)
   }
 
-  private getHandler(url: URL) {
-    if (!url.pathname.startsWith(this.base)) {
+  getHandler(req: http.IncomingMessage) {
+    let path = req.url!
+    let base = "/" + this.api.apiBaseRoute + "/"
+    if (!path.startsWith(base)) {
       return null
     }
-    const handlerName = url.pathname.replace(this.base, "")
+    let handlerName = path.replace(base, "")
     return this.handlers[handlerName]
   }
 
-  hasHandler(url: URL) {
-    return !!this.getHandler(url)
+  async handleRequest(req: http.IncomingMessage, res: http.ServerResponse) {
+    let handler = this.getHandler(req)
+    if (!handler) {
+      return this.sendNotFound(req, res)
+    }
+
+    let apiRequest = await this.readAPIRequest(req)
+    let apiResponse = await handler(apiRequest)
+
+    res.writeHead(200)
+    res.end(JSON.stringify(apiResponse))
   }
 
-  async handleRequest(req: Request) {
-    const url = new URL(req.url)
-    const handler = this.getHandler(url)!
-    const apiReqData = await req.json()
-    const apiResData = await handler(apiReqData)
+  private sendNotFound(req: http.IncomingMessage, res: http.ServerResponse) {
+    res.writeHead(404)
+    res.end(`Not found: ${req.url}`)
+  }
 
-    return new Response(JSON.stringify(apiResData))
+  private async readAPIRequest(req: http.IncomingMessage) {
+    const buffer: any[] = []
+    for await (const chunk of req) {
+      buffer.push(chunk)
+    }
+    const data = Buffer.concat(buffer)
+
+    return JSON.parse(data.toString())
   }
 }

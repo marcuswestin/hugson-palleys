@@ -1,6 +1,8 @@
-import { APIRuntimeSpecs, APISpecification, makeAPIClient } from "./lib-api-specification"
+#!/bin/bash npx ts-node
+
+import * as http from "http"
 import { makeAPIServer } from "./lib-api-server"
-import assert from "assert"
+import { APIRuntimeSpecs, APISpecification, makeAPIClient } from "./lib-api-specification"
 
 // Example API Specification
 ////////////////////////////
@@ -27,7 +29,7 @@ export const ExampleAPI: APIRuntimeSpecs<ExampleAPI> = {
 // Example API Server implementation
 ////////////////////////////////////
 
-const exampleAPIServer = makeAPIServer(ExampleAPI, {
+let exampleAPIServer = makeAPIServer(ExampleAPI, {
   upperCase: async ({ text }) => {
     return { upperCased: text.toUpperCase() }
   },
@@ -39,28 +41,22 @@ const exampleAPIServer = makeAPIServer(ExampleAPI, {
 // Example run of server & client
 /////////////////////////////////
 
-async function runExampleAPIServerAndClient() {
-  console.log("Start server")
-  const server = Bun.serve({
-    port: 3004,
-    fetch: (req) => exampleAPIServer.handleRequest(req),
-  })
+setTimeout(async function runExampleAPIServerAndClient() {
+  let serverListener = http
+    .createServer((req, res) => {
+      exampleAPIServer.handleRequest(req, res)
+    })
+    .listen(3004)
 
-  console.log("Run client tests")
   await runClient()
 
-  console.log("Done! Shut down server")
-  await server.stop()
-}
-
-await runExampleAPIServerAndClient()
+  await serverListener.close()
+})
 
 async function runClient() {
-  const exampleAPIClient = makeAPIClient(ExampleAPI)
+  let exampleAPIClient = makeAPIClient(ExampleAPI)
+  let res = await exampleAPIClient.double({ num: 4 })
+  let res2 = await exampleAPIClient.upperCase({ text: "lowercase" })
 
-  const res = await exampleAPIClient.double({ num: 4 })
-  assert.equal(res.doubled, 8)
-
-  const res2 = await exampleAPIClient.upperCase({ text: "lowercase" })
-  assert.equal(res2.upperCased, "LOWERCASE")
+  console.log(res.doubled === 8, res2.upperCased === "LOWERCASE")
 }
