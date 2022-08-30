@@ -1,11 +1,12 @@
 import React from "react"
-import { Button } from "react-native"
+import { Pressable } from "react-native"
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context"
 
 import AppStore from "./src/data/AppStore"
+import { Box, Col, FixRow, makeReactiveView, TextView } from "./src/shared/clients/views"
+
 import HomeScreen from "./src/screens/HomeScreen"
 import TestScreen from "./src/screens/TestScreen"
-import { Col, makeReactiveView, Row } from "./src/shared/clients/views"
 
 export default function App() {
   return (
@@ -36,9 +37,18 @@ const ScreenView = makeReactiveView(() => {
 
 const NavBar = makeReactiveView(() => {
   return (
-    <Row alignSelf="center">
-      <Button onPress={AppStore.navigateHome} title="Home" />
-      <Button onPress={AppStore.navigateTest} title="Test" />
-    </Row>
+    <FixRow basis={60} alignSelf="center">
+      <Pressable onPress={AppStore.navigateHome}>
+        <TextView Beet={AppStore.screen === "Home"} Byline>
+          Home
+        </TextView>
+      </Pressable>
+      <Box basis={20}></Box>
+      <Pressable onPress={AppStore.navigateTest}>
+        <TextView Beet={AppStore.screen === "Test"} Byline>
+          Test
+        </TextView>
+      </Pressable>
+    </FixRow>
   )
 })

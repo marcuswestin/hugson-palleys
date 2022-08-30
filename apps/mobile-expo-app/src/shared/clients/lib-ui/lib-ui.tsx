@@ -41,6 +41,40 @@ export function makeLibUIView<Theme extends ThemesI>(theme: Theme) {
       flexShrink: 1,
     }),
 
+    FixRow: makeBoxView(theme, NativeView, {
+      display: "flex",
+      flexDirection: "row",
+      flexWrap: "nowrap",
+      flexGrow: 0,
+      flexShrink: 0,
+      flexBasis: 40,
+    }),
+
+    FixCol: makeBoxView(theme, NativeView, {
+      display: "flex",
+      flexDirection: "column",
+      flexWrap: "nowrap",
+      flexGrow: 0,
+      flexShrink: 0,
+      flexBasis: 40,
+    }),
+
+    WrapRow: makeBoxView(theme, NativeView, {
+      display: "flex",
+      flexDirection: "row",
+      flexWrap: "wrap",
+      flexGrow: 1,
+      flexShrink: 1,
+    }),
+
+    WrapCol: makeBoxView(theme, NativeView, {
+      display: "flex",
+      flexDirection: "column",
+      flexGrow: 1,
+      flexWrap: "wrap",
+      flexShrink: 1,
+    }),
+
     getSpaceValue(key: keyof SpacesI) {
       return theme.spaces[key]
     },
@@ -148,13 +182,12 @@ function makeTextView<Theme extends ThemesI>(theme: Theme): TextViewFn<Theme> {
     let colorStylesheet: any
     let fontStylesheet: any
 
-    let key: any
-    for (key of Object.keys(props)) {
-      if (!colorStylesheet && colorsStylesheets[key]) {
+    for (const key of Object.keys(props)) {
+      if (!colorStylesheet && props[key] && colorsStylesheets[key]) {
         colorStylesheet = colorsStylesheets[key]
       }
 
-      if (!fontStylesheet && fontStylesheets[key]) {
+      if (!fontStylesheet && props[key] && fontStylesheets[key]) {
         fontStylesheet = fontStylesheets[key]
       }
     }

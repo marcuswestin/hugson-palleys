@@ -25,7 +25,9 @@ export const themes = {
   },
 } as const
 
-export const { Box, Col, Row, TextView, getSpaceValue } = makeLibUIView(themes.standard)
+export const { Box, Col, Row, FixCol, FixRow, TextView, getSpaceValue } = makeLibUIView(
+  themes.standard
+)
 
 //
 // shared-views.ts - this usually goes in its own file, and is shared across multiple apps
