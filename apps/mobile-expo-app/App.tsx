@@ -5,6 +5,7 @@ import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-cont
 import AppStore from "./src/data/AppStore"
 import { Box, Col, FixRow, makeReactiveView, TextView } from "./src/shared/clients/views"
 
+import AvailabilityScreen from "./src/screens/AvailabilityScreen"
 import HomeScreen from "./src/screens/HomeScreen"
 import TestScreen from "./src/screens/TestScreen"
 
@@ -32,21 +33,31 @@ const ScreenView = makeReactiveView(() => {
       return <HomeScreen />
     case "Test":
       return <TestScreen />
+    case "Availability":
+      return <AvailabilityScreen />
   }
 })
 
 const NavBar = makeReactiveView(() => {
   return (
     <FixRow basis={60} alignSelf="center">
-      <Pressable onPress={AppStore.navigateHome}>
+      <Pressable onPress={() => AppStore.navigateToScreen("Home")}>
         <TextView Beet={AppStore.screen === "Home"} Byline>
           Home
         </TextView>
       </Pressable>
+
       <Box basis={20}></Box>
-      <Pressable onPress={AppStore.navigateTest}>
+      <Pressable onPress={() => AppStore.navigateToScreen("Test")}>
         <TextView Beet={AppStore.screen === "Test"} Byline>
           Test
+        </TextView>
+      </Pressable>
+
+      <Box basis={20}></Box>
+      <Pressable onPress={() => AppStore.navigateToScreen("Availability")}>
+        <TextView Beet={AppStore.screen === "Availability"} Byline>
+          Availability
         </TextView>
       </Pressable>
     </FixRow>

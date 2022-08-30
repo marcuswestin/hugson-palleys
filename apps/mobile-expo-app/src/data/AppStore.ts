@@ -1,15 +1,14 @@
 import { onSnapshot, types } from "mobx-state-tree"
 
-type Screen = "Home" | "Test"
+type Screen = "Home" | "Test" | "Availability"
 
 const AppStoreModel = types
   .model("AppStore", {
-    screen: types.enumeration<Screen>(["Home", "Test"]),
+    screen: types.enumeration<Screen>(["Home", "Test", "Availability"]),
   })
   .actions((self) => {
     return {
-      navigateHome: () => (self.screen = "Home"),
-      navigateTest: () => (self.screen = "Test"),
+      navigateToScreen: (screen: Screen) => (self.screen = screen),
     }
   })
 

@@ -1,10 +1,7 @@
 import { StatusBar } from "expo-status-bar"
 import React from "react"
 import { Button, StyleSheet, Text, View } from "react-native"
-import { TestAPI } from "../shared/universal/apis/api-specs"
-import { makeAPIClient } from "../shared/universal/apis/lib-api/lib-api-specification"
-
-const client = makeAPIClient(TestAPI)
+import API from "../data/API"
 
 export default function TestScreen() {
   return (
@@ -13,7 +10,7 @@ export default function TestScreen() {
       <Button
         title="Ping server"
         onPress={async () => {
-          let res = await client.ping({ message: "hi there" })
+          let res = await API.ping({ message: "hi there" })
           alert(res.message)
         }}
       ></Button>

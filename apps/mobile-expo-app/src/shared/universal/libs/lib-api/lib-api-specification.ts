@@ -13,7 +13,9 @@ export type APIRuntimeSpecs<API extends APISpecification> = {
   apiPointNames: PathsOfAPI<API>[]
 }
 
-export type APIPointFunction<APIPoint extends APIPoints> = (req: APIPoint["request"]) => Promise<APIPoint["response"]>
+export type APIPointFunction<APIPoint extends APIPoints> = (
+  req: APIPoint["request"]
+) => Promise<APIPoint["response"]>
 
 type PathsOfAPI<API extends APISpecification> = keyof API["apiPoints"]
 type APIPointPath = string
@@ -29,8 +31,11 @@ type APIClient<API extends APISpecification> = {
   [Key in PathsOfAPI<API>]: APIPointFunction<API["apiPoints"][Key]>
 }
 
-export function makeAPIClient<API extends APISpecification>(api: APIRuntimeSpecs<API>): APIClient<API> {
+export function makeAPIClient<API extends APISpecification>(
+  api: APIRuntimeSpecs<API>
+): APIClient<API> {
   let apiClient: any = {}
+  console.log("HERE", api)
   for (let apiPointName of api.apiPointNames) {
     apiClient[apiPointName] = makeAPIPointClientFunction(api, apiPointName as string)
   }
@@ -60,7 +65,11 @@ function makeAPIPointClientFunction<API extends APISpecification, APIPoint exten
   }
 }
 
-async function fetchWithTimeout(timeout: number, url: string, params: RequestInit): Promise<Response> {
+async function fetchWithTimeout(
+  timeout: number,
+  url: string,
+  params: RequestInit
+): Promise<Response> {
   const abortController = new AbortController()
   const id = setTimeout(() => abortController.abort(), timeout)
   const response = await fetch(url, {

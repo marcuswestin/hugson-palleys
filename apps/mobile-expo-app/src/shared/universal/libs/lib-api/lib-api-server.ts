@@ -4,7 +4,10 @@
 import * as http from "http"
 import { APIPointFunction, APIRuntimeSpecs, APISpecification } from "./lib-api-specification"
 
-export function makeAPIServer<API extends APISpecification>(api: APIRuntimeSpecs<API>, handlers: APIHandlers<API>) {
+export function makeAPIServer<API extends APISpecification>(
+  api: APIRuntimeSpecs<API>,
+  handlers: APIHandlers<API>
+) {
   return new APIServer(api, handlers)
 }
 
@@ -55,7 +58,9 @@ class APIServer<API extends APISpecification> {
     }
 
     let apiRequest = await this.readAPIRequest(req)
+    this.Log("REQ", req.url, ">", apiRequest)
     let apiResponse = await handler(apiRequest)
+    this.Log("RES", req.url, "<", apiResponse)
 
     res.writeHead(200)
     res.end(JSON.stringify(apiResponse))
@@ -75,4 +80,6 @@ class APIServer<API extends APISpecification> {
 
     return JSON.parse(data.toString())
   }
+
+  Log = console.log
 }
