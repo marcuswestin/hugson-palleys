@@ -1,6 +1,12 @@
 {
+  "private": true,
+  "license": "NONE",
+  "name": "tsnode-server",
+  "version": "0.0.0",
+  "main": "node_modules/expo/AppEntry.js",
   "devDependencies": {
     "@tsconfig/node16": "^1.0.3",
+    "@types/node": "^18.7.14",
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.8.2"
   },
