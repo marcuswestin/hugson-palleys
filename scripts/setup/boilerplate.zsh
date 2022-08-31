@@ -21,6 +21,19 @@ confirm() {
     esac
 }
 
+install_if_not_exists () {
+	if [[ ! `which ${1}` ]]; then
+		echo "  missing executable ${1}"
+        
+        shift
+        while test ${#} -gt 0; do
+            echo "  ${1}"
+            ${1}
+            shift
+        done
+	fi
+}
+
 # boilerplate_init is called at the top of every bash script:
 #
 #   #!/bin/bash # Boilerplate: go to root, include boilerplate script & return to script dir

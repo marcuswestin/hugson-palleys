@@ -8,9 +8,5 @@ install_if_not_exists 'expo' 'npm install --global expo-cli'
 
 cd ${ROOT}
 
-# git submodule update --init --recursive
-# git submodule update --recursive
-
-# cd ${ROOT}/apps/shared && yarn --dev
-# cd ${ROOT}/apps/desktop-WordFlower && yarn --dev
-# cd ${ROOT}/apps/mobile-WordFlower && yarn --dev && cd ios && pod install
+cd ${ROOT}/apps/mobile-expo-app && yarn --dev
+cd ${ROOT}/apps/tsnode-server && yarn --dev
