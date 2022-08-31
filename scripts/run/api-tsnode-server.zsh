@@ -3,4 +3,4 @@ WD=`pwd` && cd "$(git rev-parse --show-toplevel)" && . scripts/setup/boilerplate
 
 cd $ROOT/apps/api-tsnode-server
 
-npx ts-node-dev server.ts
+npx ts-node-dev api-server-main.ts
