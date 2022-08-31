@@ -35,7 +35,6 @@ export function makeAPIClient<API extends APISpecification>(
   api: APIRuntimeSpecs<API>
 ): APIClient<API> {
   let apiClient: any = {}
-  console.log("HERE", api)
   for (let apiPointName of api.apiPointNames) {
     apiClient[apiPointName] = makeAPIPointClientFunction(api, apiPointName as string)
   }
