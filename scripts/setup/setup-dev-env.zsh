@@ -9,4 +9,4 @@ install_if_not_exists 'expo' 'npm install --global expo-cli'
 cd ${ROOT}
 
 cd ${ROOT}/apps/mobile-expo-app && yarn --dev
-cd ${ROOT}/apps/tsnode-server && yarn --dev
+cd ${ROOT}/apps/api-tsnode-server && yarn --dev

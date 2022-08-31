@@ -2,5 +2,5 @@
 WD=`pwd` && cd "$(git rev-parse --show-toplevel)" && . scripts/setup/boilerplate.zsh
 
 code apps/mobile-expo-app
-code apps/tsnode-server
+code apps/api-tsnode-server
 # code scripts
