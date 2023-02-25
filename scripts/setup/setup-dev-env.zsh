@@ -5,7 +5,8 @@ show_commands
 
 install_if_not_exists 'node' 'brew install node'
 install_if_not_exists 'expo' 'npm install --global expo-cli'
-install_if_not_exists 'mongosh' 'brew tap mongodb/brew' 'brew install mongodb-community' 'mongod'
+install_if_not_exists 'psql' 'brew install postgresql' 'brew services start postgresql'
+install_if_not_exists 'just' 'brew install just'
 
 cd ${ROOT}
 

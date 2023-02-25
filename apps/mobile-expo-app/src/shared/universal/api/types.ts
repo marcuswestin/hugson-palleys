@@ -1,5 +1,5 @@
-export type AccountID = string & { __AccountID: true }
-export const AccountID = (val: string) => val as AccountID
+export type AccountID = number & { __AccountID: true }
+export const AccountID = (val: number) => val as AccountID
 
 export type PhoneNumber = string & { __PhoneNumber: true }
 export const PhoneNumber = (val: string) => val as PhoneNumber

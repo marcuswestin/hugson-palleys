@@ -1,10 +1,10 @@
 import { onSnapshot, types } from "mobx-state-tree"
 
-type Screen = "Home" | "Test" | "Availability"
+export type Screen = "Home" | "Test" | "Availability" | "Kitchen Sink"
 
 const AppStoreModel = types
   .model("AppStore", {
-    screen: types.enumeration<Screen>(["Home", "Test", "Availability"]),
+    screen: types.enumeration<Screen>(["Home", "Test", "Availability", "Kitchen Sink"]),
   })
   .actions((self) => {
     return {
@@ -13,7 +13,7 @@ const AppStoreModel = types
   })
 
 const AppStore = AppStoreModel.create({
-  screen: "Home",
+  screen: "Kitchen Sink",
 })
 
 onSnapshot(AppStore, (snapshot) => {

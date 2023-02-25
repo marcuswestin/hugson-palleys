@@ -13,19 +13,17 @@ export let makeReactiveView = observer
 // raise a warning from mobx, even though everything works as expected.
 // configure({ enforceActions: "never" })
 
-const NativeView = RN.View
-
 //
 // Default layout views
 ///////////////////////
 
-export function makeLibUIView<Theme extends ThemesI>(theme: Theme) {
+export function makeThemedViews<Theme extends ThemesI>(theme: Theme) {
   return {
     TextView: makeTextView(theme),
 
-    Box: makeBoxView(theme, NativeView),
+    Box: makeBoxView(theme, RN.View),
 
-    Row: makeBoxView(theme, NativeView, {
+    Row: makeBoxView(theme, RN.View, {
       display: "flex",
       flexDirection: "row",
       flexWrap: "nowrap",
@@ -33,7 +31,7 @@ export function makeLibUIView<Theme extends ThemesI>(theme: Theme) {
       flexShrink: 1,
     }),
 
-    Col: makeBoxView(theme, NativeView, {
+    Col: makeBoxView(theme, RN.View, {
       display: "flex",
       flexDirection: "column",
       flexWrap: "nowrap",
@@ -41,7 +39,7 @@ export function makeLibUIView<Theme extends ThemesI>(theme: Theme) {
       flexShrink: 1,
     }),
 
-    FixRow: makeBoxView(theme, NativeView, {
+    FixRow: makeBoxView(theme, RN.View, {
       display: "flex",
       flexDirection: "row",
       flexWrap: "nowrap",
@@ -50,7 +48,7 @@ export function makeLibUIView<Theme extends ThemesI>(theme: Theme) {
       flexBasis: 40,
     }),
 
-    FixCol: makeBoxView(theme, NativeView, {
+    FixCol: makeBoxView(theme, RN.View, {
       display: "flex",
       flexDirection: "column",
       flexWrap: "nowrap",
@@ -59,7 +57,7 @@ export function makeLibUIView<Theme extends ThemesI>(theme: Theme) {
       flexBasis: 40,
     }),
 
-    WrapRow: makeBoxView(theme, NativeView, {
+    WrapRow: makeBoxView(theme, RN.View, {
       display: "flex",
       flexDirection: "row",
       flexWrap: "wrap",
@@ -67,18 +65,55 @@ export function makeLibUIView<Theme extends ThemesI>(theme: Theme) {
       flexShrink: 1,
     }),
 
-    WrapCol: makeBoxView(theme, NativeView, {
+    WrapCol: makeBoxView(theme, RN.View, {
       display: "flex",
       flexDirection: "column",
       flexGrow: 1,
       flexWrap: "wrap",
       flexShrink: 1,
+    }),
+
+    Button: makeBoxView(theme, ButtonView),
+
+    ScrollView: makeBoxView(theme, RN.ScrollView, {
+      display: "flex",
     }),
 
     getSpaceValue(key: keyof SpacesI) {
       return theme.spaces[key]
     },
   }
+}
+
+// type ButtonProps = Omit<PropsWithChildren<RN.ButtonProps>, "title">
+type ButtonProps = RN.ButtonProps
+const ButtonView = (props: PropsWithChildren<ButtonProps>) => {
+  // let children = React.Children.map(props.children, (child) => {
+  //   console.log("HERE", child, typeof child)
+  //   if (typeof child === "string" || typeof child === "number") {
+  //     return <RN.Text>{child}</RN.Text>
+  //   } else {
+  //     return child
+  //   }
+  // })
+  // return (
+  //   <RN.Pressable {...props} style={{ flexWrap: "wrap" }}>
+  //     {children}
+  //   </RN.Pressable>
+  // )
+
+  return (
+    <RN.Pressable {...props} style={{ flexWrap: "wrap" }}>
+      {/* <RN.View {...props}>
+        <RN.Text>{props.children}</RN.Text>
+      </RN.View> */}
+      {/* <RN.View {...props}>
+        <RN.Text>{props.title}</RN.Text>
+      </RN.View> */}
+      <RN.Text {...props}>{props.title}</RN.Text>
+      {/* {props.children} */}
+    </RN.Pressable>
+  )
 }
 
 //
@@ -116,7 +151,10 @@ export let List = function <ItemT = any>(props: ListViewProps<ItemT>) {
 // SVG Views
 ////////////
 
-export function makeSVGView<Theme extends ThemesI>(theme: Theme, xml: string): BoxViewFn<Theme> {
+export function makeSVGView<Theme extends ThemesI>(
+  theme: Theme,
+  xml: string
+): BoxViewFn<ViewProps, Theme> {
   return function (props: ThemedBoxProps<Theme>) {
     let styles = _getStylesForBoxProps(theme, props)
 
@@ -142,13 +180,15 @@ export function makeSVGView<Theme extends ThemesI>(theme: Theme, xml: string): B
 // Box & flex views
 ///////////////////
 
-type BoxViewFn<Theme extends ThemesI> = (props: ThemedBoxProps<Theme>) => React.ReactElement
+type BoxViewFn<ViewTypeProps extends ViewProps, Theme extends ThemesI> = (
+  props: ViewTypeProps & ThemedBoxProps<Theme>
+) => React.ReactElement
 // export
 function makeBoxView<ViewTypeProps extends ViewProps, Theme extends ThemesI>(
   theme: Theme,
-  ViewType: React.ComponentClass<ViewTypeProps>,
+  ViewType: React.ComponentClass<ViewTypeProps> | React.FunctionComponent<ViewTypeProps>,
   defaultStyles?: RN.ViewStyle
-): BoxViewFn<Theme> {
+): BoxViewFn<ViewTypeProps, Theme> {
   let stylesheetVal = defaultStyles
     ? StyleSheet.create({ styles: defaultStyles }).styles
     : undefined
@@ -219,6 +259,8 @@ function _getThemeFontColorStyles<Theme extends ThemesI>(theme: Theme) {
 
 // Themed property types
 ////////////////////////
+
+export type UITheme = ThemesI
 
 interface ThemesI extends Themes<ColorsI, SpacesI, FontsI> {}
 
